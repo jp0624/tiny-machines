@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createWorld,blueprint,clampPart} from '../src/physics.js';
+for(let i=0;i<3;i++)test('Blueprint completes physical mission '+(i+1),()=>{const w=createWorld(blueprint(i),i);for(let n=0;n<1920;n++)w.step();assert.equal(w.state.won,true);if(i>0)assert.equal(w.state.fanHit,true);if(i===2)assert.equal(w.state.gearHit,true);w.destroy()});
+test('A failed route does not award a goal',()=>{const w=createWorld([],2);for(let n=0;n<1000;n++)w.step();assert.equal(w.state.won,false);assert.equal(w.state.gearHit,false);w.destroy()});
+test('Fan force changes a ball trajectory and gear is pinned',()=>{const a=createWorld(blueprint(2),2),b=createWorld(blueprint(2).filter(p=>p.type!=='fan'),2);for(let n=0;n<450;n++){a.step();b.step()}assert.notEqual(a.state.x,b.state.x);assert.ok(Math.abs(a.gears[0].position.x-680)<3);a.destroy();b.destroy()});
+test('Editable bounds preserve the playfield',()=>assert.deepEqual(clampPart({x:-90,y:900,angle:150}),{x:45,y:550,angle:90}));
