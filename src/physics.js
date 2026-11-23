@@ -69,29 +69,26 @@ export const missions = [
     tip: 'A gentle slope turns a drop into a roll.',
     box: { x: 705, y: 480, width: 210 },
     route: originalRoute.slice(0, 2),
-    required: [],
   },
   {
     name: 'Across the fizzy gap',
-    brief: 'Use a fan to get Pip across the missing floor and into the box.',
+    brief: 'Get Pip across the gap and into the snack box. Try a fan for a boost.',
     tip: 'Fans push inside the striped air zone. Rotate one to change its direction.',
     box: { x: 750, y: 480, width: 210 },
     floor: gapFloor,
     route: originalRoute.slice(0, 3),
-    required: ['fan'],
   },
   {
     name: 'The power parade',
-    brief: 'Ride a fan breeze and touch a powered gear before landing.',
+    brief: 'Deliver Pip to the far snack box. Fans and gears can help.',
     tip: 'The rotating edge of a gear can nudge Pip across the gap.',
     box: { x: 805, y: 480, width: 210 },
     floor: gapFloor,
     route: originalRoute,
-    required: ['fan', 'gear'],
   },
   {
     name: 'Bridge builder',
-    brief: 'Roll Pip across a platform suspended over the gap.',
+    brief: 'Get Pip into the snack box across the gap. Try building a bridge.',
     tip: 'Tilt a platform slightly so Pip rolls off the far end.',
     box: { x: 650, y: 450, width: 180 },
     floor: [
@@ -99,22 +96,20 @@ export const missions = [
       [650, 620, 270, 40],
     ],
     route: [starter, ['platform', 431, 292, 12]],
-    required: ['platform'],
   },
   {
     name: 'Bounce lab',
-    brief: 'Bounce off a bumper and land inside the box.',
+    brief: 'Land Pip in the snack box. A bumper can redirect the ball.',
     tip: 'The bumper sends Pip away faster than a ramp. Change its angle to aim.',
     box: { x: 490, y: 510, width: 180 },
     route: [
       ['ramp', 270, 480, 20],
       ['bumper', 160, 280, 28],
     ],
-    required: ['bumper'],
   },
   {
     name: 'Spring delivery',
-    brief: 'Launch Pip from a spring into the raised box.',
+    brief: 'Get Pip into the raised snack box. Try a spring for extra height.',
     tip: 'A spring launches perpendicular to its surface. Tilt it right to send Pip right.',
     box: { x: 380, y: 310, width: 210 },
     floor: [
@@ -125,7 +120,6 @@ export const missions = [
       ['ramp', 350, 520, 20],
       ['spring', 160, 321, 16],
     ],
-    required: ['spring'],
   },
 ];
 
@@ -146,7 +140,6 @@ export function createWorld(
   index = 0,
   power = 1,
   onEvent = () => {},
-  freeBuild = false,
 ) {
   const mission = missions[index] ?? missions[0];
   const engine = Engine.create({ gravity: { x: 0, y: 1, scale: 0.001 } });
@@ -232,8 +225,6 @@ export function createWorld(
   let won = false;
   let elapsed = 0;
   let launch;
-  let entered = false;
-  let baseContact = false;
 
   function mark(type) {
     if (used.has(type)) return;
@@ -266,14 +257,6 @@ export function createWorld(
     }
   });
 
-  Events.on(engine, 'collisionActive', ({ pairs }) => {
-    baseContact = pairs.some(
-      ({ bodyA, bodyB }) =>
-        (bodyA === ball && bodyB === box[2]) ||
-        (bodyB === ball && bodyA === box[2]),
-    );
-  });
-
   function step(dt = STEP) {
     if (won) return;
     elapsed += dt;
@@ -292,25 +275,18 @@ export function createWorld(
       mark('fan');
     }
 
-    const previousY = ball.position.y;
-    baseContact = false;
     Engine.update(engine, dt);
     if (launch) {
       Body.setVelocity(ball, launch);
       mark('spring');
       launch = undefined;
     }
-    const inside =
-      ball.position.x > left + BOX_WALL / 2 + BALL_RADIUS - 1 &&
-      ball.position.x < right - BOX_WALL / 2 - BALL_RADIUS + 1;
-    if (ball.position.y < y) entered = false;
-    if (inside && previousY < y && ball.position.y >= y) entered = true;
+    const center = ball.position;
     if (
-      entered &&
-      inside &&
-      baseContact &&
-      ball.speed < 1.2 &&
-      (freeBuild || mission.required.every((type) => used.has(type)))
+      center.x > left + BOX_WALL / 2 &&
+      center.x < right - BOX_WALL / 2 &&
+      center.y >= y + BALL_RADIUS &&
+      center.y < bottom - BOX_WALL / 2
     ) {
       won = true;
       onEvent('win');

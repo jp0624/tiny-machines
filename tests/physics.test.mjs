@@ -1,3 +1,4 @@
+import Matter from 'matter-js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -34,12 +35,8 @@ for (const [index, mission] of missions.entries()) {
     }
     assert.equal(world.state.won, true);
     assert.equal(enteredFromAbove, true);
-    assert.ok(
-      Math.abs(world.state.y - (y + BOX_DEPTH - BOX_WALL / 2 - BALL_RADIUS)) <
-        2,
-    );
-    for (const type of mission.required)
-      assert.ok(world.state.used.includes(type));
+    assert.ok(world.state.y >= y + BALL_RADIUS);
+    assert.ok(world.state.y < y + BOX_DEPTH - BOX_WALL / 2);
     world.destroy();
   });
 }
@@ -85,3 +82,27 @@ test('Editable bounds preserve the playfield', () => {
     angle: 90,
   });
 });
+
+for (const [index, mission] of missions.entries()) {
+  test(`Any route into the snack box wins ${mission.name} exactly once`, () => {
+    const events = [];
+    const world = createWorld([], index, 1, event => events.push(event));
+    const {x, y, width} = mission.box;
+    const place = (x, y) => Matter.Body.setPosition(world.ball, {x, y});
+    place(x + width / 2 + BALL_RADIUS + BOX_WALL, y + BALL_RADIUS);
+    world.step();
+    assert.equal(world.state.won, false);
+    place(x, y - 2);
+    world.step();
+    assert.equal(world.state.won, false);
+    place(x, y + BOX_DEPTH + BOX_WALL + BALL_RADIUS);
+    world.step();
+    assert.equal(world.state.won, false);
+    place(x, y + BALL_RADIUS + 1);
+    Matter.Body.setVelocity(world.ball, {x: 5, y: 4});
+    world.step();
+    world.step();
+    assert.deepEqual(events.filter(event => event === 'win'), ['win']);
+    world.destroy();
+  });
+}

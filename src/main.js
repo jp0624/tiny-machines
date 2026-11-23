@@ -110,7 +110,6 @@ createApp({
         level.value,
         power.value,
         event,
-        free.value,
       );
       stats.value = world.state;
     }
@@ -508,7 +507,7 @@ createApp({
           accumulator -= STEP;
         }
         stats.value = world.state;
-        if (world.state.y > 750 || world.state.elapsed > 16000) {
+        if (!won.value && (world.state.y > 750 || world.state.elapsed > 16000)) {
           running.value = false;
           paused.value = false;
           message.value =
