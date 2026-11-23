@@ -23,6 +23,8 @@ const toolTypes = Object.keys(tools);
 const clone = (v) => JSON.parse(JSON.stringify(v));
 createApp({
   setup() {
+    const guide = ref(null);
+    let resumeAfterGuide = false;
     const canvas = ref(null),
       level = ref(0),
       free = ref(false),
@@ -33,11 +35,9 @@ createApp({
       muted = ref(true),
       hint = ref(false),
       power = ref(1),
-      stats = ref({ elapsed: 0, speed: 0, fanHit: false, gearHit: false }),
       message = ref('Pip needs a snack! Add a ramp, then press Go.'),
       won = ref(false),
-      badges = ref([]),
-      saved = ref(false);
+      badges = ref([]);
     let world,
       raf,
       ctx,
@@ -111,7 +111,6 @@ createApp({
         power.value,
         event,
       );
-      stats.value = world.state;
     }
     function reset() {
       running.value = false;
@@ -139,7 +138,7 @@ createApp({
       message.value =
         'Drag the new ' +
         type +
-        ' into place. Use the handles below for precise changes.';
+        ' into place.';
       tone(550);
     }
     function update(field, value) {
@@ -180,6 +179,7 @@ createApp({
     }
     function plan() {
       edit();
+      hint.value = false;
       snapshot();
       parts.value = blueprint(level.value);
       selected.value = 1;
@@ -210,6 +210,7 @@ createApp({
       if (paused.value) {
         paused.value = false;
         running.value = true;
+        message.value = 'Go, Pip, go!';
         return;
       }
       if (running.value) {
@@ -221,7 +222,7 @@ createApp({
       rebuild();
       running.value = true;
       message.value =
-        'Off you go, Pip! Watch the path and improve your machine.';
+        'Go, Pip, go!';
     }
     function save() {
       try {
@@ -234,7 +235,6 @@ createApp({
             power: power.value,
           }),
         );
-        saved.value = true;
         message.value = 'Invention saved on this device.';
       } catch {
         message.value =
@@ -310,7 +310,17 @@ createApp({
     function up() {
       drag = null;
     }
+    function openGuide() {
+      resumeAfterGuide = running.value;
+      if (resumeAfterGuide) go();
+      guide.value.showModal();
+    }
+    function closeGuide() {
+      if (resumeAfterGuide && paused.value) go();
+      resumeAfterGuide = false;
+    }
     function key(e) {
+      if (guide.value?.open) return;
       if (['INPUT', 'SELECT', 'BUTTON'].includes(e.target.tagName)) return;
       if (e.code === 'Space') {
         e.preventDefault();
@@ -363,8 +373,7 @@ createApp({
     function draw(t) {
       if (!ctx || !world) return;
       ctx.clearRect(0, 0, 1000, 650);
-      // painted bench grid is deliberately translucent: the full-screen illustration remains visible.
-      ctx.fillStyle = '#f4ffe8bb';
+      ctx.fillStyle = '#edf6e6';
       ctx.fillRect(0, 0, 1000, 650);
       ctx.strokeStyle = '#368a7630';
       ctx.lineWidth = 1;
@@ -488,14 +497,7 @@ createApp({
           ctx.restore();
         }
       }
-      if (won.value) {
-        ctx.fillStyle = '#ffed49ee';
-        ctx.beginPath();
-        ctx.roundRect(310, 40, 380, 90, 22);
-        ctx.fill();
-        text('SNACK-TASTIC!', 500, 80, 33);
-        text('Your invention works!', 500, 109, 19);
-      }
+
     }
     function frame(t) {
       const dt = Math.min(50, last ? t - last : 0);
@@ -506,7 +508,6 @@ createApp({
           world.step();
           accumulator -= STEP;
         }
-        stats.value = world.state;
         if (!won.value && (world.state.y > 750 || world.state.elapsed > 16000)) {
           running.value = false;
           paused.value = false;
@@ -542,11 +543,12 @@ createApp({
       muted,
       hint,
       power,
-      stats,
       message,
       won,
       badges,
-      saved,
+      guide,
+      openGuide,
+      closeGuide,
       mission,
       item,
       canUndo,
@@ -570,15 +572,60 @@ createApp({
   },
   template: `
 <main class="workshop">
- <header><a class="brand" href="/" aria-label="Tiny Machines home"><span class="brand-icon">⚙</span><span>TINY<br><b>MACHINES</b></span></a><div class="tagline">BIG IDEAS.<br><b>TINY INVENTORS.</b></div><div class="top-actions"><span class="badges">★ {{badges.length}} / {{missions.length}}</span><button @click="muted=!muted;tone()">{{muted?'♫ Sound off':'♫ Sound on'}}</button></div></header>
- <section class="game" aria-label="Invention workshop">
- <nav class="missions" aria-label="Choose challenge"><button v-for="(challenge,i) in missions" :key="challenge.name" :class="{active:!free&&level===i}" :aria-pressed="!free&&level===i" @click="choose(i)">{{i+1}} · {{challenge.name}} <span v-if="badges.includes(i)">★</span></button><button :class="{active:free}" :aria-pressed="free" @click="choose(missions.length)">Free build</button></nav>
- <div class="mission-bar"><div><p class="eyebrow">{{free?'OPEN WORKSHOP':'MAKER MISSION '+(level+1)}}</p><h1>{{free?'What will you invent?':mission.name}}</h1><p>{{free?'Combine any of the six tools and see where Pip lands.':mission.brief}}</p></div><button class="hint" @click="hint=!hint">{{hint?'Hide tip':'Need a spark? ✦'}}</button></div>
- <div v-if="hint" class="tip">{{mission.tip}} <button @click="plan">Try a working blueprint</button></div>
- <div class="bench"><canvas ref="canvas" width="1000" height="650" tabindex="0" aria-label="Physics workbench. Select a part below, then arrow keys move it, R rotates, Space runs. Drag parts with a pointer." @pointerdown="down" @pointermove="move" @pointerup="up" @pointercancel="up"></canvas><div class="telemetry" aria-label="Live experiment data"><span>{{(stats.elapsed/1000).toFixed(1)}}s</span><span>Speed {{stats.speed.toFixed(1)}}</span><span :class="{lit:stats.fanHit}">Breeze {{stats.fanHit?'✓':'○'}}</span><span :class="{lit:stats.gearHit}">Gear {{stats.gearHit?'✓':'○'}}</span></div></div>
- <div class="runbar"><button class="go" @click="go">{{running?'Ⅱ Pause':paused?'▶ Resume':won?'↻ Replay':'▶ Go, Pip!'}}</button><button @click="reset">↺ Reset ball</button><p role="status" aria-live="polite">{{message}}</p><button v-if="won&&!free&&level<missions.length-1" @click="choose(level+1)" class="next">Next mission →</button></div>
- </section>
- <aside class="toolbox" aria-label="Parts and editing"><div class="tool-heading"><h2>THE PARTS BOX</h2><span>{{parts.length}} / 18</span></div><div class="part-buttons"><button v-for="(type,i) in toolTypes" :key="type" @click="add(type)"><span class="part-symbol" :class="type" aria-hidden="true">{{tools[type].symbol}}</span><b>{{tools[type].name}}</b><small>{{tools[type].description}} · {{i+1}}</small></button></div><div class="editor"><label>Selected part<select v-model="selected"><option v-if="!parts.length" :value="undefined">Add a part first</option><option v-for="(p,i) in parts" :value="p.id">{{i+1}} · {{p.type}}</option></select></label><template v-if="item"><div class="coords"><label>X<input type="number" min="45" max="955" :value="Math.round(item.x)" @change="update('x',$event.target.value)"></label><label>Y<input type="number" min="70" max="550" :value="Math.round(item.y)" @change="update('y',$event.target.value)"></label></div><label>Angle {{item.angle}}°<input type="range" min="-90" max="90" step="5" :value="item.angle" @change="update('angle',$event.target.value)"></label><button class="remove" @click="remove">Remove selected part</button></template><label>Motor & breeze power<select v-model.number="power" @change="reset"><option :value="0.5">Gentle · 50%</option><option :value="1">Regular · 100%</option><option :value="1.5">Turbo · 150%</option></select></label></div><div class="history"><button @click="undo" :disabled="!canUndo">↶ Undo</button><button @click="redo" :disabled="!canRedo">Redo ↷</button></div><div class="history"><button @click="save">Save invention</button><button @click="load">Load</button></div><p class="help">Drag parts on the bench, or choose one and use the controls.<br><b>Keys:</b> 1–6 add tools · arrows move · R rotates · Space runs · Esc resets · Z / Y undo / redo.</p><p class="note">A playful physics simulation. All saves stay on this device.</p></aside>
- <footer>AN ORIGINAL PLAY LAB BY JOHN PARKER <span>DROP. TINKER. TRY AGAIN. ✦</span></footer>
+  <header class="mast">
+    <a class="brand" href="/" aria-label="Tiny Machines home"><i class="pip-face" aria-hidden="true">◡</i> Tiny <strong>Machines</strong></a>
+    <span class="badges" :aria-label="badges.length+' of '+missions.length+' missions complete'">★ {{ badges.length }}/{{ missions.length }}</span>
+    <button class="quiet" @click="muted=!muted;tone()" :aria-pressed="!muted">{{ muted ? 'Sound off' : 'Sound on' }}</button>
+    <button class="guide-help" @click="openGuide" aria-label="How to play">?</button>
+  </header>
+  <section class="game" aria-label="Invention workshop">
+    <div class="mission-head">
+      <div><label class="mission-select">Choose mission
+        <select aria-label="Choose mission" :value="free ? missions.length : level" @change="choose(Number($event.target.value))">
+          <option v-for="(m,i) in missions" :key="m.name" :value="i">{{ i+1 }} · {{ m.name }} {{ badges.includes(i) ? '★' : '' }}</option>
+          <option :value="missions.length">Free build</option>
+        </select>
+      </label><h1>{{ free ? 'Free build' : mission.name }}</h1></div>
+      <button class="hint" @click="hint=!hint" :aria-expanded="hint">✦ Hint</button>
+    </div>
+    <div class="bench">
+      <canvas ref="canvas" width="1000" height="650" tabindex="0" aria-label="Workbench. Drag parts to build a path into the snack box. Arrow keys move a selected part, R rotates and Space runs." @pointerdown="down" @pointermove="move" @pointerup="up" @pointercancel="up"></canvas>
+      <div v-if="hint" class="tip"><p>{{ mission.tip }}</p><button @click="plan">Try a working blueprint</button><button aria-label="Close hint" @click="hint=false">×</button></div>
+      <div v-if="won" class="delivery"><span aria-hidden="true">★</span> Snack delivered!</div>
+    </div>
+    <div class="runbar">
+      <button class="go" @click="go">{{ running ? 'Ⅱ Pause' : paused ? '▶ Resume' : won ? '↻ Replay' : '▶ Go, Pip!' }}</button>
+      <button @click="reset">Reset</button>
+      <button v-if="won && !free && level < missions.length-1" class="next" @click="choose(level+1)">Next mission →</button>
+      <p role="status">{{ message }}</p>
+    </div>
+  </section>
+  <aside class="toolbox">
+    <div class="tool-heading"><h2>Parts tray</h2><small>{{ parts.length }}/18</small></div>
+    <div class="part-buttons">
+      <button v-for="type in toolTypes" :key="type" :class="type" @click="add(type)" :aria-label="'Add '+tools[type].name" :title="tools[type].description">
+        <i aria-hidden="true">{{ tools[type].symbol }}</i>{{ tools[type].name }}
+      </button>
+    </div>
+    <details><summary>Adjust a part</summary>
+      <div class="settings">
+        <label>Selected part<select v-model="selected"><option v-if="!parts.length" :value="undefined">Add a part first</option><option v-for="(p,i) in parts" :key="p.id" :value="p.id">{{ i+1 }} · {{ tools[p.type].name }}</option></select></label>
+        <template v-if="item"><div class="coords"><label>X<input type="number" min="45" max="955" :value="Math.round(item.x)" @change="update('x',$event.target.value)"></label><label>Y<input type="number" min="70" max="550" :value="Math.round(item.y)" @change="update('y',$event.target.value)"></label></div>
+        <label>Angle · {{ item.angle }}°<input type="range" min="-90" max="90" step="5" :value="item.angle" @change="update('angle',$event.target.value)"></label>
+        <button @click="remove">Remove part</button></template>
+      </div>
+    </details>
+    <details><summary>Workshop options</summary>
+      <div class="settings"><label>Motor &amp; fan power<select v-model.number="power" @change="reset"><option :value="0.5">Gentle</option><option :value="1">Regular</option><option :value="1.5">Turbo</option></select></label>
+      <div class="paired"><button @click="save">Save build</button><button @click="load">Load build</button></div></div>
+    </details>
+    <div class="paired history"><button @click="undo" :disabled="!canUndo">↶ Undo</button><button @click="redo" :disabled="!canRedo">↷ Redo</button></div>
+  </aside>
+  <dialog ref="guide" @close="closeGuide" aria-labelledby="guide-title">
+    <i class="pip-face" aria-hidden="true">◡</i><h2 id="guide-title">Feed Pip!</h2>
+    <ol><li>Pick a part from the tray.</li><li>Drag it onto Pip’s path. Open <b>Adjust a part</b> to tilt it.</li><li>Press <b>Go, Pip!</b> Get Pip inside the pink snack box to win.</li></ol>
+    <p>Keys · 1–6 add parts, arrows move, R rotates, Space runs, Esc resets, Z/Y undo or redo.</p>
+    <button class="go" @click="guide.close()">Back to the bench</button>
+  </dialog>
 </main>`,
 }).mount('#app');

@@ -1,103 +1,107 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Nunito:wght@600;700;800;900&display=swap');
-:root{font-family:Nunito,system-ui,sans-serif;color:#173d48;background:#ffc844;font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit;color:inherit}button{cursor:pointer;border:2px solid #193d47;border-radius:10px;background:#fff6c9;padding:10px 13px;font-weight:900;box-shadow:0 3px 0 #193d47;transition:transform .12s}button:hover{transform:translateY(-2px);background:#fff}button:active{transform:translateY(2px);box-shadow:none}button:disabled{opacity:.4;cursor:not-allowed;transform:none}button:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:4px solid #ed3b83;outline-offset:3px}.workshop{min-height:100svh;background:linear-gradient(#ffb73c33,#ffb73c22),url('/workshop.webp') center/cover fixed;display:grid;grid-template-columns:minmax(0,1fr) 245px;gap:16px;padding:18px 28px 10px}header{grid-column:1/-1;display:flex;align-items:center;gap:28px}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#173d48;font-family:'Barlow Condensed',Impact,sans-serif;font-size:24px;line-height:.85;letter-spacing:1px}.brand b{font-size:39px}.brand-icon{display:grid;place-items:center;border:4px solid #173d48;border-radius:50%;width:65px;height:65px;font-size:48px;background:#fe733f;transform:rotate(-12deg)}.tagline{font-size:11px;line-height:1.3;letter-spacing:2px;border-left:2px solid;padding-left:24px}.top-actions{margin-left:auto;display:flex;gap:12px;align-items:center}.badges{background:#ffeb59;border:2px solid;padding:9px 15px;border-radius:30px;font-weight:900}.game{min-width:0}.missions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.missions button{border-radius:25px;font-size:12px;padding:8px 15px;background:#f8edc3}.missions button.active{background:#173d48;color:#fff7c7}.mission-bar{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:12px 18px;background:#fff6d9ed;border:3px solid;border-radius:16px 16px 0 0;border-bottom:0}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:900;margin:0}h1{font-family:'Barlow Condensed',Impact,sans-serif;font-size:38px;line-height:1;margin:5px 0}p{margin:6px 0}.mission-bar p:last-child{font-size:13px;max-width:640px}.hint{flex-shrink:0;background:#ffb5cf;font-size:12px}.tip{padding:10px 20px;background:#ffb5cf;border:3px solid;border-bottom:0;font-size:13px}.tip button{font-size:11px;margin-left:15px;padding:6px}.bench{position:relative;border:3px solid;background:#bdf0c777;overflow:hidden}.bench canvas{width:100%;aspect-ratio:1000/650;display:block;object-fit:contain;touch-action:none}.telemetry{position:absolute;right:12px;top:10px;display:flex;gap:7px;pointer-events:none}.telemetry span{font-size:10px;font-weight:900;background:#fff8d9e8;padding:5px 8px;border:1px solid;border-radius:5px}.telemetry .lit{background:#bafa58}.runbar{border:3px solid;border-top:0;background:#173d48;display:flex;align-items:center;gap:10px;border-radius:0 0 16px 16px;padding:11px}.runbar button{font-size:12px;flex-shrink:0}.runbar .go{background:#bafa58;font-size:18px;min-width:130px}.runbar p{color:#fff6ce;font-size:12px;line-height:1.4}.next{background:#ffb5cf}.toolbox{align-self:start;background:#fff6d9f5;border:3px solid;border-radius:17px;padding:15px;box-shadow:5px 6px 0 #193d4766;margin-top:47px}.tool-heading{display:flex;justify-content:space-between;align-items:center}h2{font-family:'Barlow Condensed',Impact,sans-serif;font-size:23px;margin:0 0 10px}.tool-heading span{font-size:10px}.part-buttons{display:flex;gap:7px}.part-buttons button{padding:5px 3px;flex:1;min-width:0;border-radius:9px}.part-buttons b{font-size:12px;display:block}.part-buttons small{display:none}.part-symbol{display:block;font-size:35px;line-height:1.3}.ramp{color:#dc8500}.fan{color:#008c9c}.gear{color:#8453ca}.editor{margin-top:17px}label{font-size:11px;font-weight:900;display:block;margin:11px 0}input,select{width:100%;min-width:0;border:2px solid;border-radius:6px;background:#fffdf1;padding:7px;font-size:12px;margin-top:4px}input[type=range]{padding:0;accent-color:#e23a77}.coords{display:flex;gap:10px}.coords label{width:50%;margin-top:0}.remove{padding:5px 9px;font-size:10px;background:#ffcdce}.history{display:flex;gap:8px;margin-top:12px}.history button{font-size:11px;padding:7px;flex:1}.help{font-size:10px;line-height:1.7;margin-top:17px}.note{font-size:9px;border-top:1px dashed;padding-top:10px;margin-top:12px}footer{grid-column:1/-1;font-size:9px;letter-spacing:2px;font-weight:900;display:flex;justify-content:space-between;padding:4px 0}@media(min-width:1500px){.workshop{padding:22px 5vw;grid-template-columns:minmax(0,1fr) 275px}.toolbox{padding:20px}.part-buttons small{display:block;font-size:8px}}@media(max-width:900px){.workshop{grid-template-columns:1fr;padding:12px}.toolbox{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:5px 25px}.tool-heading{grid-column:1/-1}.editor{grid-column:2;grid-row:2/5;margin-top:0}.help,.note{grid-column:1/-1}.bench canvas{max-height:none}.tagline{display:none}.mission-bar{padding:12px}.runbar{flex-wrap:wrap}.runbar p{flex:1 1 200px}header{gap:10px}footer{font-size:8px}}@media(max-width:500px){.brand{font-size:17px;gap:7px}.brand b{font-size:27px}.brand-icon{width:46px;height:46px;font-size:32px;border-width:3px}.top-actions{gap:5px}.top-actions button{font-size:9px;padding:8px}.badges{font-size:11px;padding:8px}.missions{gap:7px}.missions button{font-size:10px;padding:6px 9px}h1{font-size:29px}.mission-bar{gap:8px;align-items:flex-start}.mission-bar p:last-child{font-size:11px}.hint{font-size:10px;padding:7px;max-width:90px}.telemetry{top:6px;right:5px;gap:3px}.telemetry span{font-size:7px;padding:3px}.toolbox{padding:12px;gap:5px 15px}.runbar p{flex-basis:100%;order:3}.bench canvas{min-height:260px;object-fit:fill}footer span{display:none}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.workshop{background-attachment:scroll}}
-
-.part-buttons {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+:root {
+  font-family: Nunito, ui-rounded, "Trebuchet MS", system-ui, sans-serif;
+  color: #183e41;
+  background: #264d49;
+  --ink: #183e41;
+  --paper: #fff8e5;
+  --line: 2px solid var(--ink);
 }
-.part-symbol.platform { color: #148565; }
-.part-symbol.bumper { color: #ba3556; }
-.part-symbol.spring { color: #146e99; }
-
+* { box-sizing: border-box; }
+body { margin: 0; background: linear-gradient(#183f40ad,#234841bb), url('/workshop.webp') center / cover; }
+button, select, input, summary { font: inherit; color: inherit; }
+button, select, summary { cursor: pointer; }
+button {
+  border: var(--line); border-radius: 12px; background: var(--paper);
+  padding: .55rem .85rem; font-size: .85rem; font-weight: 800;
+  box-shadow: 0 2px var(--ink);
+}
+button:hover:enabled { filter: brightness(1.06); transform: translateY(-1px); }
+button:active:enabled { transform: translateY(1px); box-shadow: none; }
+button:disabled { opacity: .45; cursor: default; }
+:focus-visible { outline: 3px solid #db3377; outline-offset: 2px; }
 .workshop {
-  height: 100dvh;
-  min-height: 0;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(100%, 1400px); height: 100dvh; margin: auto; padding: clamp(8px,2vw,26px);
+  display: grid; grid-template-columns: minmax(0,1fr) clamp(220px,22vw,290px);
+  grid-template-rows: auto minmax(0,1fr); gap: 14px;
 }
-.game {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
+.mast { grid-column: 1/-1; display: flex; gap: 9px; align-items: center; color: var(--paper); }
+.brand { display: inline-flex; align-items: center; gap: .23em; color: inherit; text-decoration: none; font-weight: 900; font-size: clamp(23px,3vw,38px); letter-spacing: -.065em; }
+.brand strong { color: #ffe075; }
+.pip-face {
+  width: 1.15em; height: 1.15em; border: 2px solid var(--ink); border-radius: 50%; background: #ff8b68;
+  position: relative; display: inline-grid; align-content: end; justify-content: center;
+  line-height: 1; font-style: normal; font-weight: 900; color: var(--ink); transform: rotate(-13deg);
 }
-.missions {
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding: 3px 2px 6px;
-  margin-bottom: 4px;
-}
-.missions button { flex: none; }
+.pip-face::before,.pip-face::after { content: ''; position: absolute; top: 31%; left: 23%; width: 12%; height: 14%; background: var(--ink); border-radius: 50%; }
+.pip-face::after { left: 64%; }
+.badges { margin-left: auto; color: #ffe075; font-weight: 900; white-space: nowrap; }
+.mast button { color: var(--ink); }
+.guide-help { border-radius: 50%; width: 37px; height: 37px; padding: 0; }
+.game,.toolbox { min-width: 0; min-height: 0; border: var(--line); border-radius: 20px; background: var(--paper); box-shadow: 0 4px #102e30; }
+.game { overflow: hidden; display: grid; grid-template-rows: auto minmax(0,1fr) auto; }
+.mission-head,.runbar,.tool-heading,.paired { display: flex; align-items: center; gap: 10px; }
+.mission-head,.tool-heading { justify-content: space-between; }
+.mission-head,.runbar { padding: 12px clamp(12px,2vw,24px); }
+.mission-select { position: relative; display: inline-flex; align-items: center; gap: 6px; color: #32635b; font-weight: 800; font-size: .8rem; text-decoration: underline; text-underline-offset: 3px; }
+.mission-select::after { content: '▾'; }
+.mission-select select { position: absolute; inset: 0; width: 100%; opacity: 0; }
+.mission-select:focus-within { outline: 3px solid #db3377; }
+h1,h2,p { margin: 0; }
+h1,h2 { line-height: 1.08; letter-spacing: -.045em; }
+h1 { margin-top: 3px; font-size: clamp(22px,2.5vw,38px); }
+.hint { background: #ffe49c; }
 .bench {
-  flex: 1;
-  min-height: 0;
-  container-type: size;
-  display: grid;
-  place-items: center;
+  container-type: size; display: grid; place-items: center; position: relative; min-height: 0;
+  overflow: hidden; border-block: var(--line);
+  background: repeating-linear-gradient(135deg,#c0daca 0 4px,#c9e1cf 4px 12px);
 }
-.bench canvas {
-  width: min(100cqw, calc(100cqh * 1000 / 650));
-  height: auto;
-  min-height: 0;
+canvas { display: block; width: min(100cqw, calc(100cqh * 1000 / 650)); height: auto; touch-action: none; }
+.tip,.delivery { position: absolute; border: var(--line); box-shadow: 0 3px var(--ink); }
+.tip { right: 8px; top: 8px; width: min(290px,94%); padding: 12px; border-radius: 12px; background: #fff1b1; font-size: .88rem; z-index: 2; }
+.tip p { padding-right: 24px; margin-bottom: 8px; }
+.tip button:last-child { position: absolute; top: 5px; right: 6px; padding: 0 5px; }
+.delivery { top: 10%; border-radius: 40px; padding: 9px 20px; background: #ffe06e; font-weight: 900; font-size: clamp(16px,2.5vw,32px); transform: rotate(-3deg); }
+.delivery span { color: #ae441b; }
+@media(prefers-reduced-motion:no-preference) {
+  .delivery { animation: celebrate .45s ease-out both; }
+  @keyframes celebrate { from { transform: translateY(-14px) rotate(5deg) scale(.8); opacity: 0; } }
 }
-.toolbox {
-  min-height: 0;
-  max-height: 100%;
-  overflow: auto;
-  margin-top: 0;
+.go,.next { background: #b6eb83; white-space: nowrap; }
+.next { background: #ffc0ce; }
+.runbar p { font-size: .84rem; line-height: 1.28; }
+.toolbox { overflow: auto; padding: clamp(12px,1.6vw,22px); align-self: start; max-height: 100%; }
+.tool-heading small { font-weight: 800; }
+.part-buttons { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin: 14px 0 18px; }
+.part-buttons button { display: grid; place-items: center; gap: 2px; padding: 7px 2px; }
+.part-buttons i { font: bold 30px/1.15 system-ui; }
+.ramp { background: #ffd387; }.fan { background: #9fe7e0; }.gear { background: #d8c2ff; }
+.platform { background: #abe5b9; }.bumper { background: #ffb9af; }.spring { background: #b4dcff; }
+details { border-top: 1px solid #bdc9b7; padding: 9px 0; }
+summary { font-weight: 800; font-size: .9rem; }
+.settings { display: grid; gap: 8px; padding: 10px 2px 2px; }
+.settings label { display: grid; gap: 3px; font-size: .8rem; font-weight: 700; }
+.settings select,.settings input { width: 100%; min-width: 0; padding: 4px; accent-color: #226d62; }
+.coords { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.paired button { flex: 1; }
+.history { margin: 8px 0 3px; }
+dialog { max-width: min(410px,92vw); max-height: 90dvh; padding: 22px; border: var(--line); border-radius: 18px; color: var(--ink); background: var(--paper); }
+dialog::backdrop { background: #062b36ac; }
+dialog .pip-face { font-size: 38px; } dialog h2 { margin: 10px 0; }
+dialog li,dialog p { margin: 8px 0; } dialog p { font-size: .83rem; } dialog button { margin-top: 6px; }
+@media (max-width: 690px) and (orientation: portrait) {
+  .workshop { grid-template-columns: minmax(0,1fr); grid-template-rows: auto minmax(0,1fr) auto; gap: 8px; }
+  .mast { gap: 5px; }.mast button { padding: 5px; font-size: .75rem; }.guide-help { width: 30px; height: 30px; }
+  .toolbox { align-self: stretch; max-height: 29dvh; padding: 8px 12px; }
+  .tool-heading h2 { font-size: 1.08rem; }.tool-heading small { font-size: .72rem; }
+  .part-buttons { grid-template-columns: repeat(6,minmax(0,1fr)); gap: 3px; margin: 6px 0 8px; }
+  .part-buttons button { font-size: clamp(9px,2.6vw,12px); border-radius: 8px; padding: 4px 0; }.part-buttons i { font-size: 23px; }
+  details { padding: 5px 0; }.history button { padding: 4px; }.history { margin: 4px 0; }
+  .mission-head,.runbar { padding: 7px 10px; }.runbar { flex-wrap: wrap; gap: 5px; }.runbar p { flex-basis: 100%; font-size: .75rem; }
 }
-footer { align-items: center; }
-footer .guide-help {
-  position: static;
-  padding: 4px 10px;
-  font-size: 10px;
-}
-@media (max-width: 900px) {
-  .workshop {
-    grid-template-rows: auto minmax(0, 1fr) minmax(68px, 24%) auto;
-    gap: 7px;
-    padding: 8px;
-  }
-  .toolbox { align-self: stretch; align-content: start; }
-  .runbar { gap: 6px; padding: 7px; }
-  .runbar button { padding: 6px 8px; }
-  .runbar .go { min-width: auto; font-size: 14px; }
-  .runbar p { order: 4; flex: 1 1 100%; margin: 1px; }
-}
-@media (min-width: 620px) and (max-height: 540px) {
-  .workshop {
-    padding: 5px 10px;
-    gap: 4px 10px;
-    grid-template-columns: minmax(0, 1fr) 190px;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-  }
-  .brand-icon { width: 34px; height: 34px; font-size: 24px; }
-  .brand, .brand b { font-size: 18px; }
-  .missions button, .hint, .top-actions button { padding: 4px 8px; }
-  .mission-bar { padding: 4px 10px; }
-  h1 { font-size: 24px; margin: 2px 0; }
-  .toolbox { display: block; }
-}
-@media (max-width: 619px) and (max-height: 620px) {
-  .workshop { height: auto; min-height: 100dvh; grid-template-rows: auto; }
-  .bench { flex: none; aspect-ratio: 1000 / 650; }
-}
-@media (min-width: 620px) and (max-height: 540px) {
-  .game {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(128px, 18vw, 175px);
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
-    gap: 3px;
-  }
-  .missions { grid-column: 1 / -1; }
-  .bench { grid-column: 1; grid-row: 2 / 5; }
-  .mission-bar, .tip, .runbar { grid-column: 2; }
-  .mission-bar { grid-row: 2; display: block; border-bottom: 2px solid; }
-  .tip { grid-row: 3; overflow: auto; padding: 3px; }
-  .runbar { grid-row: 4; flex-wrap: wrap; gap: 3px; padding: 3px; }
-  .runbar p { font-size: 10px; line-height: 1.1; }
-  .runbar button, .runbar .go { font-size: 11px; min-width: 0; padding: 4px; }
-}
-@media (max-width: 619px) and (min-height: 621px) and (max-height: 740px) {
-  .workshop { grid-template-rows: auto minmax(0, 1fr) 16% auto; }
+@media (max-height: 520px) and (orientation: landscape) {
+  .workshop { gap: 6px; padding: 6px; grid-template-columns: minmax(0,1fr) clamp(150px,23vw,230px); }
+  .brand { font-size: 22px; }.mast button,.runbar button,.hint { padding: 4px 8px; }.guide-help { width: 29px; height: 29px; }
+  .mission-head,.runbar,.toolbox { padding: 5px 9px; }
+  .mission-head>div { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; } h1 { font-size: 20px; }
+  .part-buttons { margin: 8px 0; gap: 4px; }.part-buttons button { padding: 2px; }.part-buttons i { font-size: 20px; }
 }
