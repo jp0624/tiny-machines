@@ -121,6 +121,42 @@ export const missions = [
       ['spring', 160, 321, 16],
     ],
   },
+  {
+    name: 'Needle vault',
+    expert: true,
+    brief: 'Vault the tower and land in the narrow rooftop box.',
+    tip: 'Roll off a ramp onto a tilted spring. Aim just over the tower, then let Pip fall into the rooftop box.',
+    box: { x: 855, y: 245, width: 82 },
+    floor: [[665, 385, 80, 490], [855, 318, 100, 14]],
+    route: [starter, ['spring', 460, 325, 25]],
+  },
+  {
+    name: 'The wrong-way chute',
+    expert: true,
+    brief: 'Slip through the low window, then turn back into the chute.',
+    tip: 'Bounce right into a fan. Catch the front edge of a platform beyond the window to knock Pip back to the left.',
+    box: { x: 361, y: 550, width: 76 },
+    floor: [[332, 122, 28, 244], [320, 460, 26, 210], [365, 625, 100, 18]],
+    route: [['bumper', 160, 270, 30], ['fan', 240, 250, -15], ['platform', 560, 365, 10]],
+  },
+  {
+    name: 'Boomerang bakery',
+    expert: true,
+    brief: 'Send Pip around the floating shelf and back into the hanging box.',
+    tip: 'Launch right from under Pip. Place a second spring across the gap and tilt it left for the return trip over the shelf.',
+    box: { x: 331, y: 210, width: 72 },
+    floor: [[437, 173, 100, 16], [493, 430, 40, 360], [331, 278, 82, 14]],
+    route: [['spring', 160, 350, 30], ['spring', 620, 360, -20]],
+  },
+  {
+    name: 'The last crumb',
+    expert: true,
+    brief: 'Thread the high opening, bank off the far wall and drop into the slot.',
+    tip: 'Launch from a ramp and spring through the high opening. A fan can carry Pip to the far wall. Angle a platform back toward the box.',
+    box: { x: 731, y: 495, width: 64 },
+    floor: [[680, 460, 42, 560], [680, 10, 42, 20], [849, 263, 62, 18], [731, 563, 76, 14]],
+    route: [starter, ['spring', 460, 325, 25], ['fan', 620, 180, 0], ['platform', 865, 435, -20]],
+  },
 ];
 
 export function blueprint(index) {

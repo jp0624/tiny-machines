@@ -1,5 +1,5 @@
 # Tiny Machines · Invention Workshop
-An original full-screen illustrated physics game by John Parker. Build rolling paths for Pip with ramps, fans, powered gears, platforms, bumpers, and springs. Six missions, free build, pointer dragging, precise keyboard/numeric editing, undo/redo, run/pause/reset, local saves and optional synthesized audio.
+An original full-screen illustrated physics game by John Parker. Build rolling paths for Pip with ramps, fans, powered gears, platforms, bumpers, and springs. Ten missions, including four expert challenges, free build, pointer dragging, precise keyboard/numeric editing, undo/redo, run/pause/reset, local saves and optional synthesized audio.
 
 ## Run
 Node 20.19+ or 22.12+. `npm ci`, `npm run dev`. `npm test` exercises real rigid-body mission solutions, failure paths, airflow and motor constraints. `npm run build` creates `dist` for Vercel's Vite preset.

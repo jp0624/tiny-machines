@@ -407,7 +407,7 @@ createApp({
         base = box.y + BOX_DEPTH;
       ctx.fillStyle = '#fabbcc65';
       ctx.fillRect(left, box.y, box.width, BOX_DEPTH);
-      text('SNACK BOX', box.x, box.y + 27, 16, '#7f1749');
+      text(box.width < 100 ? 'SNACK' : 'SNACK BOX', box.x, box.y + 27, 16, '#7f1749');
       for (const p of parts.value) {
         if (p.type === 'fan') {
           ctx.save();
@@ -595,7 +595,7 @@ createApp({
     <div class="mission-head">
       <div><label class="mission-select">Choose mission
         <select aria-label="Choose mission" :value="free ? missions.length : level" @change="choose(Number($event.target.value))">
-          <option v-for="(m,i) in missions" :key="m.name" :value="i">{{ i+1 }} · {{ m.name }} {{ badges.includes(i) ? '★' : '' }}</option>
+          <option v-for="(m,i) in missions" :key="m.name" :value="i">{{ i+1 }} · {{ m.expert ? 'Expert · ' : '' }}{{ m.name }} {{ badges.includes(i) ? '★' : '' }}</option>
           <option :value="missions.length">Free build</option>
         </select>
       </label><h1>{{ free ? 'Free build' : mission.name }}</h1></div>
