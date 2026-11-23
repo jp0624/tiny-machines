@@ -62,6 +62,8 @@ const gapFloor = [
   [850, 620, 340, 40],
 ];
 
+const windKit = ['fan', 'platform'];
+
 export const missions = [
   {
     name: 'The snack express',
@@ -163,6 +165,38 @@ export const missions = [
     floor: [[680, 460, 42, 560], [680, 10, 42, 20], [849, 263, 62, 18], [731, 563, 76, 14]],
     route: [starter, ['spring', 460, 325, 25], ['fan', 620, 180, 0], ['platform', 865, 435, -20]],
   },
+  {
+    name: 'Breezeway bridge',
+    allowedParts: windKit,
+    unlockWith: windKit,
+    brief: 'Ride a platform and catch a breeze to open the snack box across the gap.',
+    tip: 'Tilt the platform down to the right. Put a fan at its far end and aim the breeze slightly upward.',
+    box: { x: 912, y: 410, width: 154 },
+    floor: [[200, 610, 400, 40], [910, 482, 170, 12]],
+    route: [['platform', 210, 240, 15], ['fan', 290, 245, -10]],
+  },
+  {
+    name: 'Updraft alley',
+    expert: true,
+    allowedParts: windKit,
+    unlockWith: windKit,
+    brief: 'Catch Pip in midair and redirect the flight over the chimney.',
+    tip: 'Blow sideways near the starting point. Tip a platform upward to catch Pip and clear the chimney.',
+    box: { x: 922, y: 430, width: 84 },
+    floor: [[760, 475, 55, 460], [922, 501, 100, 12]],
+    route: [['fan', 150, 145, 0], ['platform', 530, 330, -20]],
+  },
+  {
+    name: 'Cloud shelf relay',
+    expert: true,
+    allowedParts: windKit,
+    unlockWith: windKit,
+    brief: 'Cross the wind tunnel and deliver Pip to a high shelf.',
+    tip: 'Roll into an upward breeze on the first platform. Catch Pip on a second, uphill platform to reach the high box.',
+    box: { x: 938, y: 245, width: 96 },
+    floor: [[555, 94, 32, 188], [555, 468, 32, 420], [938, 317, 108, 14]],
+    route: [['platform', 215, 270, 20], ['fan', 295, 260, -35], ['platform', 740, 230, -15]],
+  },
 ];
 
 export function blueprint(index) {
@@ -209,6 +243,11 @@ export function createWorld(
     }),
   ];
   add(box);
+  let lid;
+  if (mission.unlockWith) {
+    lid = Bodies.rectangle(x, y, width + BOX_WALL, BOX_WALL, boxSurface);
+    add(lid);
+  }
 
   const gears = [];
   const ramps = [];
@@ -271,6 +310,10 @@ export function createWorld(
   function mark(type) {
     if (used.has(type)) return;
     used.add(type);
+    if (lid && mission.unlockWith.every(part => used.has(part))) {
+      Composite.remove(engine.world, lid);
+      lid = undefined;
+    }
     onEvent(type);
   }
 
@@ -325,6 +368,7 @@ export function createWorld(
     }
     const center = ball.position;
     if (
+      !lid &&
       center.x > left + BOX_WALL / 2 &&
       center.x < right - BOX_WALL / 2 &&
       center.y >= y + BALL_RADIUS &&
@@ -343,6 +387,7 @@ export function createWorld(
     fans,
     floor,
     box,
+    get lid() { return lid; },
     step,
     get state() {
       return {

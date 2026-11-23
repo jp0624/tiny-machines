@@ -86,6 +86,19 @@ test('Editable bounds preserve the playfield', () => {
 });
 
 for (const [index, mission] of missions.entries()) {
+  if (mission.unlockWith) {
+    for (const omitted of mission.unlockWith) {
+      test(`${mission.name} keeps its lid shut without the ${omitted}`, () => {
+        const parts = blueprint(index).filter(part => part.type !== omitted);
+        const world = createWorld(parts, index);
+        for (let n = 0; n < 1920; n++) world.step();
+        assert.ok(world.lid);
+        assert.equal(world.state.won, false);
+        world.destroy();
+      });
+    }
+    continue;
+  }
   test(`Any route into the snack box wins ${mission.name} exactly once`, () => {
     const events = [];
     const world = createWorld([], index, 1, event => events.push(event));

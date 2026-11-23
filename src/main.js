@@ -482,6 +482,11 @@ createApp({
         circle(0, 0, 15, '#fff3a3');
         ctx.restore();
       }
+      if (world.lid) {
+        path(world.lid.vertices, '#ffe075');
+        const remaining = mission.value.unlockWith.filter(type => !world.state.used.includes(type));
+        text(remaining.map(type => tools[type].name).join(' + '), box.x, box.y - 12, 16);
+      }
       const b = world.ball;
       ctx.save();
       ctx.translate(b.position.x, b.position.y);
