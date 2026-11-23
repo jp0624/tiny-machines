@@ -46,6 +46,7 @@ createApp({
       history = [],
       future = [],
       drag = null,
+      previewPartId = null,
       audio,
       lastSound = 0,
       nextId = 100;
@@ -141,15 +142,25 @@ createApp({
         ' into place.';
       tone(550);
     }
-    function update(field, value) {
+    function update(field, value, recordHistory = true) {
       if (!item.value) return;
       edit();
-      snapshot();
+      if (recordHistory) snapshot();
       Object.assign(
         item.value,
         clampPart({ ...item.value, [field]: Number(value) }),
       );
       rebuild();
+    }
+    function previewAngle(event) {
+      const part = item.value;
+      const angle = event.target.valueAsNumber;
+      if (!part || part.angle === angle) return;
+      update('angle', angle, previewPartId !== part.id);
+      previewPartId = part.id;
+    }
+    function finishAnglePreview() {
+      previewPartId = null;
     }
     function remove() {
       if (!item.value) return;
@@ -555,6 +566,8 @@ createApp({
       canRedo,
       add,
       update,
+      previewAngle,
+      finishAnglePreview,
       remove,
       undo,
       redo,
@@ -611,7 +624,7 @@ createApp({
       <div class="settings">
         <label>Selected part<select v-model="selected"><option v-if="!parts.length" :value="undefined">Add a part first</option><option v-for="(p,i) in parts" :key="p.id" :value="p.id">{{ i+1 }} · {{ tools[p.type].name }}</option></select></label>
         <template v-if="item"><div class="coords"><label>X<input type="number" min="45" max="955" :value="Math.round(item.x)" @change="update('x',$event.target.value)"></label><label>Y<input type="number" min="70" max="550" :value="Math.round(item.y)" @change="update('y',$event.target.value)"></label></div>
-        <label>Angle · {{ item.angle }}°<input type="range" min="-90" max="90" step="5" :value="item.angle" @change="update('angle',$event.target.value)"></label>
+        <label>Angle · {{ item.angle }}°<input type="range" min="-90" max="90" step="5" :value="item.angle" @input="previewAngle" @change="finishAnglePreview" @pointercancel="finishAnglePreview" @blur="finishAnglePreview"></label>
         <button @click="remove">Remove part</button></template>
       </div>
     </details>
