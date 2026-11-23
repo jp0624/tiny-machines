@@ -14,7 +14,9 @@ import {
 
 for (const [index, mission] of missions.entries()) {
   test(`Blueprint completes ${mission.name} by dropping into the box`, () => {
-    const world = createWorld(blueprint(index), index);
+    const parts = blueprint(index);
+    for (const part of parts) assert.ok(!mission.allowedParts || mission.allowedParts.includes(part.type));
+    const world = createWorld(parts, index);
     const { x, y, width } = mission.box;
     let enteredFromAbove = false;
     for (

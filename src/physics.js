@@ -72,6 +72,7 @@ export const missions = [
   },
   {
     name: 'Across the fizzy gap',
+    allowedParts: ['ramp', 'fan'],
     brief: 'Get Pip across the gap and into the snack box. Try a fan for a boost.',
     tip: 'Fans push inside the striped air zone. Rotate one to change its direction.',
     box: { x: 750, y: 480, width: 210 },
@@ -80,6 +81,7 @@ export const missions = [
   },
   {
     name: 'The power parade',
+    allowedParts: ['ramp', 'fan', 'gear'],
     brief: 'Deliver Pip to the far snack box. Fans and gears can help.',
     tip: 'The rotating edge of a gear can nudge Pip across the gap.',
     box: { x: 805, y: 480, width: 210 },
@@ -99,6 +101,7 @@ export const missions = [
   },
   {
     name: 'Bounce lab',
+    allowedParts: ['ramp', 'bumper'],
     brief: 'Land Pip in the snack box. A bumper can redirect the ball.',
     tip: 'The bumper sends Pip away faster than a ramp. Change its angle to aim.',
     box: { x: 490, y: 510, width: 180 },
@@ -123,6 +126,7 @@ export const missions = [
   },
   {
     name: 'Needle vault',
+    allowedParts: ['ramp', 'spring'],
     expert: true,
     brief: 'Vault the tower and land in the narrow rooftop box.',
     tip: 'Roll off a ramp onto a tilted spring. Aim just over the tower, then let Pip fall into the rooftop box.',
@@ -132,6 +136,7 @@ export const missions = [
   },
   {
     name: 'The wrong-way chute',
+    allowedParts: ['bumper', 'fan', 'platform'],
     expert: true,
     brief: 'Slip through the low window, then turn back into the chute.',
     tip: 'Bounce right into a fan. Catch the front edge of a platform beyond the window to knock Pip back to the left.',
@@ -141,6 +146,7 @@ export const missions = [
   },
   {
     name: 'Boomerang bakery',
+    allowedParts: ['spring'],
     expert: true,
     brief: 'Send Pip around the floating shelf and back into the hanging box.',
     tip: 'Launch right from under Pip. Place a second spring across the gap and tilt it left for the return trip over the shelf.',

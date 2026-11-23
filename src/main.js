@@ -54,6 +54,7 @@ createApp({
       badges.value = JSON.parse(localStorage.getItem('tiny-badges') || '[]');
     } catch {}
     const mission = computed(() => missions[level.value]),
+      available = computed(() => free.value ? toolTypes : mission.value.allowedParts ?? toolTypes),
       item = computed(() => parts.value.find((p) => p.id === selected.value)),
       canUndo = ref(false),
       canRedo = ref(false);
@@ -126,6 +127,10 @@ createApp({
       won.value = false;
     }
     function add(type) {
+      if (!available.value.includes(type)) {
+        message.value = tools[type].name + ' is locked for this mission.';
+        return;
+      }
       edit();
       if (parts.value.length >= 18) {
         message.value = 'Your bench holds 18 parts. Remove one to make room.';
@@ -257,25 +262,30 @@ createApp({
         const d = JSON.parse(localStorage.getItem('tiny-machine'));
         if (!d || !Array.isArray(d.parts)) throw Error();
         edit();
-        snapshot();
-        parts.value = d.parts
-          .filter(
-            (p) =>
-              p &&
-              Object.hasOwn(tools, p.type) &&
-              [p.x, p.y, p.angle].every(Number.isFinite),
-          )
-          .slice(0, 18)
-          .map((p) => clampPart({ ...p, id: nextId++ }));
-        level.value = Math.max(
+        const savedLevel = Math.max(
           0,
           Math.min(missions.length - 1, Math.trunc(Number(d.level) || 0)),
         );
+        if (level.value === savedLevel && free.value === !!d.free) {
+          snapshot();
+        } else {
+          history = [];
+          future = [];
+          flags();
+        }
+        level.value = savedLevel;
         free.value = !!d.free;
+        const validParts = d.parts.filter(p =>
+          p && Object.hasOwn(tools, p.type) && [p.x, p.y, p.angle].every(Number.isFinite)
+        );
+        const permitted = validParts.filter(p => available.value.includes(p.type));
+        parts.value = permitted.slice(0, 18).map(p => clampPart({ ...p, id: nextId++ }));
         power.value = Math.max(0.5, Math.min(1.5, Number(d.power) || 1));
         selected.value = parts.value[0]?.id;
         reset();
-        message.value = 'Saved invention restored.';
+        message.value = permitted.length === validParts.length
+          ? 'Saved invention restored.'
+          : 'Build restored with the parts allowed in this mission.';
       } catch {
         message.value = 'No saved invention yet. Build one and press Save.';
       }
@@ -543,6 +553,7 @@ createApp({
     return {
       tools,
       toolTypes,
+      available,
       missions,
       canvas,
       level,
@@ -616,8 +627,8 @@ createApp({
   <aside class="toolbox">
     <div class="tool-heading"><h2>Parts tray</h2><small>{{ parts.length }}/18</small></div>
     <div class="part-buttons">
-      <button v-for="type in toolTypes" :key="type" :class="type" @click="add(type)" :aria-label="'Add '+tools[type].name" :title="tools[type].description">
-        <i aria-hidden="true">{{ tools[type].symbol }}</i>{{ tools[type].name }}
+      <button v-for="type in toolTypes" :key="type" :class="type" :disabled="!available.includes(type)" @click="add(type)" :aria-label="'Add '+tools[type].name" :title="available.includes(type) ? tools[type].description : 'Locked for this mission'">
+        <i aria-hidden="true">{{ available.includes(type) ? tools[type].symbol : '🔒' }}</i>{{ tools[type].name }}
       </button>
     </div>
     <details><summary>Adjust a part</summary>
